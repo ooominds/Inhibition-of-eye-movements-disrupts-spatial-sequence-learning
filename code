@@ -1,0 +1,25 @@
+SRTdata_FINAL = readRDS('SRTdata_FINAL.rds')
+
+require(lme4)
+
+SRTdata_FINAL$CONDITION=as.factor(SRTdata_FINAL$CONDITION)
+SRTdata_FINAL$BLOCK_TYPE=as.factor(SRTdata_FINAL$BLOCK_TYPE)
+SRTdata_FINAL$ANTICIPATIONS=as.factor(SRTdata_FINAL$ANTICIPATIONS)
+SRTdata_FINAL$CORRECT_ANTICIPATIONS=as.factor(SRTdata_FINAL$CORRECT_ANTICIPATIONS)
+
+SRTdata_FINAL$CONDITION <- factor(SRTdata_FINAL$CONDITION,
+                                         levels = c(1,2),
+                                         labels = c("O-SRT", "F-SRT"))
+SRTdata_FINAL$BLOCK_TYPE <- factor(SRTdata_FINAL$BLOCK_TYPE,
+                                    levels = c(0,1),
+                                    labels = c("Interfere", "Learn"))
+
+
+###ANTICIPATIONS
+
+print(summary(ANTI2 <-glmer(ANTICIPATIONS ~BLOCK_TYPE+CONDITION+(1|PARTICIPANT),data=SRTdata_FINAL, family = binomial,control=glmerControl(optimizer='bobyqa'))), cor=FALSE)
+
+
+###CORRECT ANTICIPATIONS
+print(summary(CORRANTI1 <-glmer(CORRECT_ANTICIPATIONS ~BLOCK_TYPE*CONDITION+(1|PARTICIPANT),data=SRTdata_FINAL, family = binomial,control=glmerControl(optimizer='bobyqa'))), cor=FALSE)
+anova(CORRANTI1)
