@@ -22,4 +22,7 @@ print(summary(ANTI2 <-glmer(ANTICIPATIONS ~BLOCK_TYPE+CONDITION+(1|PARTICIPANT),
 
 ###CORRECT ANTICIPATIONS
 print(summary(CORRANTI1 <-glmer(CORRECT_ANTICIPATIONS ~BLOCK_TYPE*CONDITION+(1|PARTICIPANT),data=SRTdata_FINAL, family = binomial,control=glmerControl(optimizer='bobyqa'))), cor=FALSE)
-anova(CORRANTI1)
+
+require(emmeans)
+simpsl <- emmeans(CORRANTI1, ~BLOCK_TYPE*CONDITION)
+contrast(simpsl, "consec", simple = "BLOCK_TYPE", combine = TRUE, adjust = "none")
